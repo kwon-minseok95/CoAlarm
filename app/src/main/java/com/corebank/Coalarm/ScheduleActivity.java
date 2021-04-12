@@ -184,7 +184,6 @@ public class ScheduleActivity extends AppCompatActivity {
         sPhone = (TextView) findViewById((R.id.sPhone));
         deleteMessage = (Button) findViewById(R.id.delete_message);
 
-
         sPhone.setEnabled(false);
 
         // 받는사람리스트
@@ -383,6 +382,14 @@ public class ScheduleActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        // 메세지 내용 삭제 버튼
+        deleteMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                message.setText(null);
+            }
+        });
+
         // 취소버튼
         cancelBtn = (Button) findViewById(R.id.cancel_btn);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -455,7 +462,7 @@ public class ScheduleActivity extends AppCompatActivity {
                                         }
                                     }
                                 });
-                        //NO dddd
+                        //NO
                         builder.setPositiveButton(pButton2,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
@@ -626,7 +633,8 @@ public class ScheduleActivity extends AppCompatActivity {
                         button = "OK";
                     }
                     popup(pTitle, msg, button);
-                } else if("".equals("sch_key")){ // 스케줄이 없으면 등록
+                } else {
+
                     try {
                         String result = new ScheduleTask().execute("saveSchedule", Message, DateStart, TimeStart, sUserId, sUserPhone, sReceivePhone).get();
 
@@ -644,17 +652,6 @@ public class ScheduleActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                } else{ // 등록된 스케줄 있음
-                    if (getLocale().equals("ko")) {
-                        pTitle = "스케줄";
-                        msg = "등록된 스케줄이 있습니다.";
-                        button = "확인";
-                    } else {
-                        pTitle = "Schedule";
-                        msg = "There is a registered schedule.";
-                        button = "OK";
-                    }
-                    popup2(pTitle, msg, button);
                 }
             }
         });
