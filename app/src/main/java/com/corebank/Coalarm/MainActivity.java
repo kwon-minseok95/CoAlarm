@@ -31,9 +31,7 @@ import kotlin.jvm.functions.Function2;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     String title, msg, button;
-//testdsafasdasd
-    //방가방가
-//test
+// 이거되면 다됨
     public static String getLocale() {
         String LaunguageOfLocale = Locale.getDefault().getLanguage();
         return LaunguageOfLocale;
