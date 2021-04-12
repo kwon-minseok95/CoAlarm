@@ -21,6 +21,7 @@ import com.kakao.sdk.user.model.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
@@ -31,7 +32,7 @@ import kotlin.jvm.functions.Function2;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     String title, msg, button;
-// 이거되면 다됨
+
     public static String getLocale() {
         String LaunguageOfLocale = Locale.getDefault().getLanguage();
         return LaunguageOfLocale;
@@ -90,7 +91,13 @@ public class MainActivity extends AppCompatActivity {
                     String kakaoID = Long.toString(user.getId());
                     // 카카오 아이디 있으면 바로 로그인 아니면 회원가입으로 넘어감
                     try {
+                        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+                        long start = System.currentTimeMillis();
+                        System.out.println("시작시간 : " + format1.format(start));
                         String result = new CustomTask().execute("kakaoIDselect", kakaoID).get();
+                        long end = System.currentTimeMillis();
+                        System.out.println("종료시간 : " + format1.format(end));
+                        System.out.println("수행시간 : " + (end - start) + "ns");
                         Log.d(TAG,"result : " + result);
                         JSONObject kakaoInfo = new JSONObject(result);
 
@@ -123,40 +130,45 @@ public class MainActivity extends AppCompatActivity {
                                     });
                             builder.show();
                         }else{ // 카카오 아이디 있음 -> 로그인
-                            if(getLocale().equals("ko")){
-                                title = "로그인 확인" ;
-                                msg = "로그인되었습니다.";
-                                button = "확인";
-                            }else{
-                                title = "Login" ;
-                                msg = "Login Successed.";
-                                button = "OK";
-                            }
-                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                            builder.setTitle(title);
-                            builder.setMessage(msg);
-                            builder.setCancelable(false);
-                            builder.setPositiveButton(button,
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            try {
-                                                Intent intent = new Intent(MainActivity.this, ScheduleActivity.class);
-                                                SharedPreference.setAttribute(getApplicationContext(), "userID", kakaoInfo.getString("USER_ID"));
-                                                SharedPreference.setAttribute(getApplicationContext(), "password", kakaoInfo.getString("NICKNAME"));
-                                                SharedPreference.setAttribute(getApplicationContext(), "userPhone", kakaoInfo.getString("PHONE"));
-                                                startActivity(intent);
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    });
-                            builder.setCancelable(false);
-                            builder.show();
+                            Intent intent = new Intent(MainActivity.this, ScheduleActivity.class);
+                            SharedPreference.setAttribute(getApplicationContext(), "userID", kakaoInfo.getString("USER_ID"));
+                            SharedPreference.setAttribute(getApplicationContext(), "password", kakaoInfo.getString("NICKNAME"));
+                            SharedPreference.setAttribute(getApplicationContext(), "userPhone", kakaoInfo.getString("PHONE"));
+                            startActivity(intent);
+//                            if(getLocale().equals("ko")){
+//                                title = "로그인 확인" ;
+//                                msg = "로그인되었습니다.";
+//                                button = "확인";
+//                            }else{
+//                                title = "Login" ;
+//                                msg = "Login Successed.";
+//                                button = "OK";
+//                            }
+//                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+//                            builder.setTitle(title);
+//                            builder.setMessage(msg);
+//                            builder.setCancelable(false);
+//                            builder.setPositiveButton(button,
+//                                    new DialogInterface.OnClickListener() {
+//                                        public void onClick(DialogInterface dialog, int which) {
+//                                            try {
+//                                                Intent intent = new Intent(MainActivity.this, ScheduleActivity.class);
+//                                                SharedPreference.setAttribute(getApplicationContext(), "userID", kakaoInfo.getString("USER_ID"));
+//                                                SharedPreference.setAttribute(getApplicationContext(), "password", kakaoInfo.getString("NICKNAME"));
+//                                                SharedPreference.setAttribute(getApplicationContext(), "userPhone", kakaoInfo.getString("PHONE"));
+//                                                startActivity(intent);
+//                                            } catch (JSONException e) {
+//                                                e.printStackTrace();
+//                                            }
+//                                        }
+//                                    });
+//                            builder.setCancelable(false);
+//                            builder.show();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                } else {
+                } else { // kakao user null일 때
                 }
                 return null;
             }
