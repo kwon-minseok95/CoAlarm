@@ -11,7 +11,7 @@
     <string name="min">분</string>
     <string name="message">메세지</string>
     <string name="date">날짜</string>
-    <string name="time">시간</string>
+    <string name="time">시각</string>
     <string name="save">저장</string>
     <string name="coalarm_register">CoAlarm 회원가입</string>
     <string name="sns_register">SNS 간편회원가입</string>
