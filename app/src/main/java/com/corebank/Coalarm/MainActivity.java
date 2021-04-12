@@ -31,7 +31,7 @@ import kotlin.jvm.functions.Function2;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     String title, msg, button;
-//test4
+//test6
     public static String getLocale() {
         String LaunguageOfLocale = Locale.getDefault().getLanguage();
         return LaunguageOfLocale;
