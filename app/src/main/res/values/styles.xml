@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar"/>
+
+    <style name="button">
+        <item name="android:layout_width">335dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:backgroundTint">#5B9BD5</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+</resources>

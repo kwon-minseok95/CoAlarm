@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <LinearLayout
+        android:layout_width="382dp"
+        android:layout_height="509dp"
+        android:layout_margin="20dp"
+
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.039">
+
+
+        <TextView
+            android:id="@+id/textview_everyday_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:gravity="center"
+            android:text="@string/every_day_of_the_week" />
+
+        <ListView
+            android:id="@+id/everyday_listView"
+            android:layout_width="match_parent"
+            android:layout_height="348dp"
+            android:layout_marginTop="8dp"
+            android:choiceMode="multipleChoice"
+            android:numColumns="1"
+            android:orientation="horizontal" />
+
+        <Button
+            android:id="@+id/dayOKbtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/OK" />
+
+    </LinearLayout>
+
+
+    <!--android:background="@drawable/schedule_border"-->
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

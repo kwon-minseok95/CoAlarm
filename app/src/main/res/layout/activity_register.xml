@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/authCode"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/shape_edit_button"
+        android:ems="10"
+        android:hint="@string/authentication"
+        android:inputType="phone"
+        android:padding="12.5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.217"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userPhone" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/authConfirm"
+        android:layout_width="89dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="36dp"
+        android:background="@drawable/button"
+        android:text="@string/confirm"
+        android:textAllCaps="false"
+        android:textColor="#F6F6F6"
+        android:textSize="17dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/userPhone"
+        app:layout_constraintTop_toBottomOf="@+id/auth_button" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="@string/coalarm_register"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <EditText
+        android:id="@+id/userID"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/shape_edit_button"
+        android:ems="10"
+        android:hint="@string/id"
+        android:inputType="textPersonName"
+        android:padding="12.5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.267"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <EditText
+        android:id="@+id/userPhone"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/shape_edit_button"
+        android:ems="10"
+        android:hint="@string/mobile"
+        android:inputType="phone"
+        android:padding="12.5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.267"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userPasswordChk" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/auth_button"
+        android:layout_width="59dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="36dp"
+        android:background="@drawable/button"
+        android:text="@string/auth"
+        android:textAllCaps="false"
+        android:textColor="#F6F6F6"
+        android:textSize="17dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/userPhone"
+        app:layout_constraintTop_toBottomOf="@+id/userPasswordChk" />
+
+    <EditText
+        android:id="@+id/userPasswordChk"
+        android:layout_width="340dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/shape_edit_button"
+        android:ems="10"
+        android:hint="@string/pw_check"
+        android:inputType="textPassword"
+        android:padding="12.5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userPassword" />
+
+
+    <EditText
+        android:id="@+id/userPassword"
+        android:layout_width="340dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/shape_edit_button"
+        android:ems="10"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:padding="12.5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userID" />
+
+
+    <Spinner
+        android:id="@+id/memberSort"
+        android:layout_width="340dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/shape_edit_button"
+        android:clickable="false"
+        android:dropDownWidth="300dp"
+        android:enabled="false"
+        android:entries="@array/membersort_array"
+        android:spinnerMode="dropdown"
+        android:textColor="#ffffff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/authCode" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/register_button"
+        android:layout_width="335dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/button"
+        android:text="@string/register"
+        android:textAllCaps="false"
+        android:textColor="#F6F6F6"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/memberSort" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/check_button2"
+        android:layout_width="59dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="36dp"
+        android:background="@drawable/button"
+        android:text="@string/id_check"
+        android:textAllCaps="false"
+        android:textColor="#F6F6F6"
+        android:textSize="17dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="20dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

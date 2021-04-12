@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#A0A0A0">
+    <!-- Background을 일반적인 Drawable로 설정 -->
+    <item
+        android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp"></corners>
+            <solid android:color="#F15F5F"></solid>
+        </shape>
+    </item>
+</ripple>

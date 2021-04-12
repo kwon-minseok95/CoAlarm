@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="cycleCode_array">
+        <item>@string/Every_year</item>
+        <item>@string/month_after_month</item>
+        <item>@string/Every_week</item>
+        <item>@string/every_day_of_the_week</item>
+        <item>@string/Everyday</item>
+        <item>@string/every_minute</item>
+    </string-array>
+
+
+</resources>

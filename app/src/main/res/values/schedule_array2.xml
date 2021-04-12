@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string-array name="cycleFlg_array2">
+        <item> </item>
+        <item>@string/success</item>
+        <item>@string/fail</item>
+        <item>@string/Dialing</item>
+        <item>@string/answer</item>
+    </string-array>
+
+</resources>

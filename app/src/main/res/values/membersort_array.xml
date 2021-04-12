@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string-array name="membersort_array">
+        <item>@string/individual</item>
+        <item>@string/paid_individual</item>
+        <item>@string/enterprise</item>
+        <item>@string/employee</item>
+    </string-array>
+
+</resources>

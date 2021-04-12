@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string-array name="cycleFlg_array">
+        <item>@string/Regular</item>
+        <item>@string/Immediately</item>
+    </string-array>
+
+</resources>
