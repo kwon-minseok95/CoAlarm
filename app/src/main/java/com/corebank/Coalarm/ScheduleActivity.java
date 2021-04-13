@@ -510,16 +510,27 @@ public class ScheduleActivity extends AppCompatActivity {
         timeStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                long now = System.currentTimeMillis();
+                Date mDate = new Date(now);
+                SimpleDateFormat simpleDate = new SimpleDateFormat("hh");
+                SimpleDateFormat simpleDate2 = new SimpleDateFormat("mm");
+                SimpleDateFormat simpleDate3 = new SimpleDateFormat("ss");
+                String formatHour = simpleDate.format(mDate);
+                String formatMinute = simpleDate2.format(mDate);
+                String formatSecond = simpleDate3.format(mDate);
+               // Log.d("현재시간 : ", getTime);
+
                 view = View.inflate(ScheduleActivity.this, R.layout.time_dialog, null);
                 final NumberPicker numberPickerHour = view.findViewById(R.id.numpicker_hours);
                 numberPickerHour.setMaxValue(23);
-                numberPickerHour.setValue(sharedPreferences.getInt("Hours", 0));
+                    numberPickerHour.setValue(Integer.parseInt(formatHour));
+
                 final NumberPicker numberPickerMinutes = view.findViewById(R.id.numpicker_minutes);
                 numberPickerMinutes.setMaxValue(59);
-                numberPickerMinutes.setValue(sharedPreferences.getInt("Minutes", 0));
+                numberPickerMinutes.setValue(Integer.parseInt(formatMinute));
                 final NumberPicker numberPickerSeconds = view.findViewById(R.id.numpicker_seconds);
                 numberPickerSeconds.setMaxValue(59);
-                numberPickerSeconds.setValue(sharedPreferences.getInt("Seconds", 0));
+                numberPickerSeconds.setValue(Integer.parseInt(formatSecond));
                 Button cancel = view.findViewById(R.id.cancel);
                 Button ok = view.findViewById(R.id.ok);
                 AlertDialog.Builder builder = new AlertDialog.Builder(ScheduleActivity.this);
