@@ -671,7 +671,7 @@ public class ScheduleActivity extends AppCompatActivity {
                             button = "확인";
                         } else {
                             pTitle = "Schedule";
-                            msg = "Please specify a start date.";
+                            msg = "Please set it after the current date.";
                             button = "OK";
                         }
                         popup(pTitle, msg, button);
@@ -684,7 +684,7 @@ public class ScheduleActivity extends AppCompatActivity {
                                     button = "확인";
                                 } else {
                                     pTitle = "Schedule";
-                                    msg = "Please specify a start date.";
+                                    msg = "Please set it after the current time.";
                                     button = "OK";
                                 }
                                 popup(pTitle, msg, button);
