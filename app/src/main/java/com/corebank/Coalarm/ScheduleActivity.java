@@ -441,8 +441,6 @@ public class ScheduleActivity extends AppCompatActivity {
                                                     pMsg = "The schedule has been canceled.";
                                                     pButton = "OK";
                                                 }
-                                                popup(pTitle, pMsg, pButton);
-
                                             }
                                             AlertDialog.Builder builder = new AlertDialog.Builder(ScheduleActivity.this);
                                             builder.setTitle(pTitle);
@@ -516,14 +514,12 @@ public class ScheduleActivity extends AppCompatActivity {
             public void onClick(View view) {
                 long now = System.currentTimeMillis();
                 Date mDate = new Date(now);
-                SimpleDateFormat simpleDate = new SimpleDateFormat("hh");
+                SimpleDateFormat simpleDate = new SimpleDateFormat("HH"); // 24시간
                 SimpleDateFormat simpleDate2 = new SimpleDateFormat("mm");
                 SimpleDateFormat simpleDate3 = new SimpleDateFormat("ss");
                 String formatHour = simpleDate.format(mDate);
                 String formatMinute = simpleDate2.format(mDate);
                 String formatSecond = simpleDate3.format(mDate);
-               // Log.d("현재시간 : ", getTime);
-
 
                 view = View.inflate(ScheduleActivity.this, R.layout.time_dialog, null);
                 final NumberPicker numberPickerHour = view.findViewById(R.id.numpicker_hours);
@@ -575,13 +571,17 @@ public class ScheduleActivity extends AppCompatActivity {
                 // 시간
                 long now = System.currentTimeMillis();
                 Date mDate = new Date(now);
-                SimpleDateFormat simpleDate4 = new SimpleDateFormat("hhmmss");
+                SimpleDateFormat simpleDate4 = new SimpleDateFormat("HHmmss");
                 String formatTime = simpleDate4.format(mDate);
                 Log.d(TAG, "현재 시간 : " + formatTime);
+                String timeStarttxt = timeStart.getText().toString(); // 시작날짜
+                timeStarttxt = timeStarttxt.replace(":", "");
+                Log.d(TAG, "텍스트 시간 : " + timeStarttxt);
 
-                int compareTime = formatTime.compareTo(String.valueOf(timeStart.getText())); // 양수면 formatTime이 전 시간  음수면 formatTime이 후
-
+                int compareTime = formatTime.compareTo(timeStarttxt); // 양수면 formatTime이 전 시간  음수면 formatTime이 후
+                Log.d(TAG, "비교 시간 : " + compareTime);
                 // 날짜
+                int compareDate = 0;
                 long mNow = System.currentTimeMillis();
                 Date mReDate = new Date(mNow); // 현재 날짜
 
@@ -589,19 +589,18 @@ public class ScheduleActivity extends AppCompatActivity {
                 String formatDate2 = mFormat1.format(mReDate); // 날짜
                 String formatDateStart2 = String.valueOf(dateStart.getText()).replace("/", "-");
 
-                Date formatDate = null;
-                Date formatDateStart = null;
-                try {
-                    formatDate = mFormat1.parse(formatDate2);
-                    formatDateStart = mFormat1.parse(formatDateStart2);
-                    Log.d(TAG, "formatDate : " + formatDate);
-                    Log.d(TAG, "formatDateStrart : " + formatDateStart);
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                if(!"날짜".equals(formatDateStart2) || "date".equals(formatDateStart2)) {
+                    try {
+                        Date formatDate = mFormat1.parse(formatDate2);
+                        Date formatDateStart = mFormat1.parse(formatDateStart2);
+                        Log.d(TAG, "formatDate : " + formatDate);
+                        Log.d(TAG, "formatDateStrart : " + formatDateStart);
+                        compareDate = formatDate.compareTo(formatDateStart); // 양수면 formatDate(현재)가 전 날짜
+                        Log.d(TAG, "현재 날짜 비교 : " + compareDate);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
-
-                int compareDate = formatDate.compareTo(formatDateStart); // 양수면 formatDate(현재)가 전 날짜
-                Log.d(TAG, "현재 날짜 비교 : " + compareDate);
 
                 String DateStart = dateStart.getText().toString(); // 시작날짜
                 DateStart = DateStart.replace("/", "");
@@ -652,7 +651,7 @@ public class ScheduleActivity extends AppCompatActivity {
                             button = "OK";
                         }
                         popup(pTitle, msg, button);
-                    } else if ("시간".equals(TimeStart) || "time".equals(TimeStart)) {
+                    } else if ("시각".equals(TimeStart) || "time".equals(TimeStart)) {
                         if (getLocale().equals("ko")) {
                             pTitle = "스케줄";
                             msg = "예약 시간을 지정해주세요.";
