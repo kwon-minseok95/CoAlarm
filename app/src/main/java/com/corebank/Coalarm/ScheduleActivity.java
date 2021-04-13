@@ -17,6 +17,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -69,7 +70,9 @@ import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Time;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -78,6 +81,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
 
 public class ScheduleActivity extends AppCompatActivity {
@@ -94,6 +98,8 @@ public class ScheduleActivity extends AppCompatActivity {
     JSONObject joSendData;
     Toolbar myToolbar;
 
+
+
     ArrayList<String> standardMsg = new ArrayList<String>();
 
     // 팝업
@@ -101,6 +107,8 @@ public class ScheduleActivity extends AppCompatActivity {
 
     // 시작날짜
     Calendar sCalendar = Calendar.getInstance();
+    Calendar cal = Calendar.getInstance();
+    Calendar now = Calendar.getInstance();
     DatePickerDialog.OnDateSetListener myDatePicker1 = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -266,7 +274,6 @@ public class ScheduleActivity extends AppCompatActivity {
             }
         }
 
-
         // 스케줄 내역 string에 저장
         try {
             String recentResult = new ScheduleTask().execute("recentSelect", sUserId).get(); // 최근 스케줄
@@ -340,7 +347,6 @@ public class ScheduleActivity extends AppCompatActivity {
 
                     tableLayout1.addView(tableRow);
                 }
-
             }
 
             //진행중내역
@@ -474,7 +480,6 @@ public class ScheduleActivity extends AppCompatActivity {
                             popup(pTitle, msg, button);
                         }*/
 
-
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getLocale().equals("ko")) {
@@ -502,6 +507,8 @@ public class ScheduleActivity extends AppCompatActivity {
             }
         });
 
+
+
         // 시작 시간
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         timeStart.setOnClickListener(new View.OnClickListener() {
@@ -516,6 +523,7 @@ public class ScheduleActivity extends AppCompatActivity {
                 String formatMinute = simpleDate2.format(mDate);
                 String formatSecond = simpleDate3.format(mDate);
                // Log.d("현재시간 : ", getTime);
+
 
                 view = View.inflate(ScheduleActivity.this, R.layout.time_dialog, null);
                 final NumberPicker numberPickerHour = view.findViewById(R.id.numpicker_hours);
@@ -564,21 +572,43 @@ public class ScheduleActivity extends AppCompatActivity {
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 시간
+                long now = System.currentTimeMillis();
+                Date mDate = new Date(now);
+                SimpleDateFormat simpleDate4 = new SimpleDateFormat("hhmmss");
+                String formatTime = simpleDate4.format(mDate);
+                Log.d(TAG, "현재 시간 : " + formatTime);
 
-                //                Log.d("sbItemList : " , sbItemList);
+                int compareTime = formatTime.compareTo(String.valueOf(timeStart.getText())); // 양수면 formatTime이 전 시간  음수면 formatTime이 후
+
+                // 날짜
                 long mNow = System.currentTimeMillis();
-                Date mReDate = new Date(mNow);
-                SimpleDateFormat mFormat1 = new SimpleDateFormat("yyyyMMdd");
-                SimpleDateFormat mFormat2 = new SimpleDateFormat("HHmm");
-                String formatDate = mFormat1.format(mReDate); // 날짜
-                String formatTime = mFormat2.format(mReDate); // 시간
+                Date mReDate = new Date(mNow); // 현재 날짜
 
-                String Message = message.getText().toString(); // 메세지
+                SimpleDateFormat mFormat1 = new SimpleDateFormat("yyyy-MM-dd"); // 텍스트 날짜
+                String formatDate2 = mFormat1.format(mReDate); // 날짜
+                String formatDateStart2 = String.valueOf(dateStart.getText()).replace("/", "-");
+
+                Date formatDate = null;
+                Date formatDateStart = null;
+                try {
+                    formatDate = mFormat1.parse(formatDate2);
+                    formatDateStart = mFormat1.parse(formatDateStart2);
+                    Log.d(TAG, "formatDate : " + formatDate);
+                    Log.d(TAG, "formatDateStrart : " + formatDateStart);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                int compareDate = formatDate.compareTo(formatDateStart); // 양수면 formatDate(현재)가 전 날짜
+                Log.d(TAG, "현재 날짜 비교 : " + compareDate);
 
                 String DateStart = dateStart.getText().toString(); // 시작날짜
                 DateStart = DateStart.replace("/", "");
 
-                String sReceivePhone = sPhone.getText().toString();
+
+                String Message = message.getText().toString(); // 메세지
+                String sReceivePhone = sPhone.getText().toString(); // 받는사람
 
 
                 String TimeStart = timeStart.getText().toString(); // 시작시간
@@ -633,7 +663,33 @@ public class ScheduleActivity extends AppCompatActivity {
                             button = "OK";
                         }
                         popup(pTitle, msg, button);
+                    } else if (compareDate>0) { // 현재 날짜가 전
+                        if (getLocale().equals("ko")) {
+                            pTitle = "스케줄";
+                            msg = "현재날짜 이후로 설정해주세요.";
+                            button = "확인";
+                        } else {
+                            pTitle = "Schedule";
+                            msg = "Please specify a start date.";
+                            button = "OK";
+                        }
+                        popup(pTitle, msg, button);
                     } else {
+                        if(compareDate == 0) {
+                            if (compareTime>0) { // 현재 날짜가 전
+                                if (getLocale().equals("ko")) {
+                                    pTitle = "스케줄";
+                                    msg = "현재시간 이후로 설정해주세요.";
+                                    button = "확인";
+                                } else {
+                                    pTitle = "Schedule";
+                                    msg = "Please specify a start date.";
+                                    button = "OK";
+                                }
+                                popup(pTitle, msg, button);
+                                return;
+                            }
+                        }
                         try {
                             String result = new ScheduleTask().execute("saveSchedule", Message, DateStart, TimeStart, sUserId, sUserPhone, sReceivePhone).get();
 
