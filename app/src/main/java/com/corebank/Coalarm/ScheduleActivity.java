@@ -69,6 +69,7 @@ import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -78,6 +79,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
 
 public class ScheduleActivity extends AppCompatActivity {
@@ -101,6 +103,7 @@ public class ScheduleActivity extends AppCompatActivity {
 
     // 시작날짜
     Calendar sCalendar = Calendar.getInstance();
+
     DatePickerDialog.OnDateSetListener myDatePicker1 = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -266,7 +269,6 @@ public class ScheduleActivity extends AppCompatActivity {
             }
         }
 
-
         // 스케줄 내역 string에 저장
         try {
             String recentResult = new ScheduleTask().execute("recentSelect", sUserId).get(); // 최근 스케줄
@@ -340,7 +342,6 @@ public class ScheduleActivity extends AppCompatActivity {
 
                     tableLayout1.addView(tableRow);
                 }
-
             }
 
             //진행중내역
@@ -474,7 +475,6 @@ public class ScheduleActivity extends AppCompatActivity {
                             popup(pTitle, msg, button);
                         }*/
 
-
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (getLocale().equals("ko")) {
@@ -499,8 +499,11 @@ public class ScheduleActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 new DatePickerDialog(ScheduleActivity.this, myDatePicker1, sCalendar.get(Calendar.YEAR), sCalendar.get(Calendar.MONTH), sCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
             }
         });
+
+
 
         // 시작 시간
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -559,9 +562,7 @@ public class ScheduleActivity extends AppCompatActivity {
                 long mNow = System.currentTimeMillis();
                 Date mReDate = new Date(mNow);
                 SimpleDateFormat mFormat1 = new SimpleDateFormat("yyyyMMdd");
-                SimpleDateFormat mFormat2 = new SimpleDateFormat("HHmm");
                 String formatDate = mFormat1.format(mReDate); // 날짜
-                String formatTime = mFormat2.format(mReDate); // 시간
 
                 String Message = message.getText().toString(); // 메세지
 
@@ -623,7 +624,7 @@ public class ScheduleActivity extends AppCompatActivity {
                             button = "OK";
                         }
                         popup(pTitle, msg, button);
-                    } else {
+                    }  else {
                         try {
                             String result = new ScheduleTask().execute("saveSchedule", Message, DateStart, TimeStart, sUserId, sUserPhone, sReceivePhone).get();
 
