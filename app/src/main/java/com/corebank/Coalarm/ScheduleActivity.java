@@ -86,7 +86,7 @@ public class ScheduleActivity extends AppCompatActivity {
     // 첫 번째 뒤로 가기 버튼을 누를 때 표시
     private Toast toast;
     private static final String TAG = "ScheduleActivity";
-    Button save_btn, add_btn, delete_btn, dayOK_btn, stopBtn, cancelBtn;
+    Button save_btn, add_btn, delete_btn, dayOK_btn, stopBtn, cancelBtn, deleteMessage;
     EditText message, title, dateEnd, timeStart, dateStart, timeEnd, cycle, userPhone, userId, scenarioNum;
     TextView sPhone;
     TableLayout tableLayout1;
@@ -148,6 +148,7 @@ public class ScheduleActivity extends AppCompatActivity {
         builder.show();
     }
 
+    // 화면 클릭하면 키보드 창 사라짐
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         View focusView = getCurrentFocus();
@@ -165,7 +166,8 @@ public class ScheduleActivity extends AppCompatActivity {
         return super.dispatchTouchEvent(ev);
     }
 
-    // 키보드 창 화면 클릭시 사라짐
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,18 +176,19 @@ public class ScheduleActivity extends AppCompatActivity {
         // 키보드 사용시 UI
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        save_btn = (Button)findViewById(R.id.save_btn);
-        message = (EditText)findViewById(R.id.message);
+        save_btn = (Button) findViewById(R.id.save_btn);
+        message = (EditText) findViewById(R.id.message);
         dateStart = (EditText) findViewById(R.id.DateStart);
         timeStart = (EditText) findViewById(R.id.TimeStart);
         tableLayout1 = (TableLayout) findViewById(R.id.tableLayout1);
         sPhone = (TextView) findViewById((R.id.sPhone));
+        deleteMessage = (Button) findViewById(R.id.delete_message);
 
         sPhone.setEnabled(false);
 
         // 받는사람리스트
-        StringBuilder  sbItemList = new StringBuilder();
-        final ArrayList<String> itemList  = new ArrayList<String>();
+        StringBuilder sbItemList = new StringBuilder();
+        final ArrayList<String> itemList = new ArrayList<String>();
 
         // 툴바(메뉴)
         myToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -195,8 +198,8 @@ public class ScheduleActivity extends AppCompatActivity {
 
         sUserId = SharedPreference.getAttribute(getApplicationContext(), "userID"); // 세션 아이디
         sUserPhone = SharedPreference.getAttribute(getApplicationContext(), "userPhone"); // 세션 전화번호
-        Log.d("SharePre","sUserid : " + sUserId);
-        Log.d("SharePre","sUserPhone : " + sUserPhone);
+        Log.d("SharePre", "sUserid : " + sUserId);
+        Log.d("SharePre", "sUserPhone : " + sUserPhone);
 
         class ScheduleTask extends AsyncTask<String, Void, String> {
             String sendMsg, receiveMsg;
@@ -207,7 +210,7 @@ public class ScheduleActivity extends AppCompatActivity {
                 try {
                     String str;
                     URL url = new URL("http://uitool.org:18080/coalarm/biz/android/AndroidSchedule.jsp");
-//                    URL url = new URL("http://..4.154:8088/coalarm/biz/android/AndroidSchedule.jsp");
+                    //URL url = new URL("http://223.223.4.31:8088/coalarm/biz/android/AndroidSchedule.jsp");
                     Log.d("ScheduleActivity", "conn시작");
 
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -219,13 +222,13 @@ public class ScheduleActivity extends AppCompatActivity {
                         sendMsg = "userID=" + strings[1] + "&type=" + strings[0];
                         Log.d("RecentlyScheduleActivity", "=================recentSelect=============>>>>> " + sendMsg);
                     } else if (strings[0].equals("ongoingSelect")) { // 진행중 내역
-                        sendMsg = "userID=" + strings[1] +  "&type=" + strings[0];
+                        sendMsg = "userID=" + strings[1] + "&type=" + strings[0];
                         Log.d("CheckScheduleActivity", "=================ongoingSelect=============>>>>> " + sendMsg);
                     } else if (strings[0].equals("stopUpdate")) { // 중지
                         sendMsg = "schedule_key=" + strings[1] + "&type=" + strings[0];
                         Log.d("CheckScheduleActivity", "=================stopUpdate=============>>>>> " + sendMsg);
-                    } else if(strings[0].equals("saveSchedule")){
-                        if(joSendData == null) {
+                    } else if (strings[0].equals("saveSchedule")) {
+                        if (joSendData == null) {
                             // 조회된 데이터가 없을 때
                             joSendData = new JSONObject();
                         }
@@ -235,7 +238,7 @@ public class ScheduleActivity extends AppCompatActivity {
                         joSendData.put("end_date", strings[2]);
                         joSendData.put("end_time", strings[3]);
                         joSendData.put("user_id", strings[4]);
-                        sendMsg = "DateStart="+strings[2]+"&message="+strings[1]+"&TimeStart="+strings[3]+"&sUserId="+strings[4]+"&sUserPhone="+strings[5]+"&type="+strings[0]+"&joSendData="+joSendData.toString() ;
+                        sendMsg = "DateStart=" + strings[2] + "&message=" + strings[1] + "&TimeStart=" + strings[3] + "&sUserId=" + strings[4] + "&sUserPhone=" + strings[5] + "&type=" + strings[0] + "&joSendData=" + joSendData.toString();
                         Log.d("saveSchedule", "=================sendMsg=============>>>>> " + sendMsg);
                     }
 
@@ -254,14 +257,15 @@ public class ScheduleActivity extends AppCompatActivity {
                         Log.d("통신 결과", conn.getResponseCode() + "에러");
                     }
 
-                    }catch(MalformedURLException e){
-                        e.printStackTrace();
-                    } catch(Exception e){
-                        e.printStackTrace();
-                    }
-                    return receiveMsg;
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                return receiveMsg;
             }
+        }
+
 
         // 스케줄 내역 string에 저장
         try {
@@ -297,7 +301,7 @@ public class ScheduleActivity extends AppCompatActivity {
 
                     TextView textView5 = new TextView(getApplicationContext());
                     String dateStr = joRTemp.getString("send_date") + joRTemp.getString("send_time");
-                    if(!"".equals(dateStr)) {
+                    if (!"".equals(dateStr)) {
                         SimpleDateFormat parseSdf = new SimpleDateFormat("yyyyMMddHHmmss");
                         Date date = parseSdf.parse(dateStr);
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -309,7 +313,6 @@ public class ScheduleActivity extends AppCompatActivity {
                     textView5.setGravity(Gravity.CENTER);
                     textView5.setTextSize(18);
                     textView5.setMinHeight(100);
-
 
                     textView5.setBackgroundResource(R.drawable.schedule_border);
                     tableRow.addView(textView5, 520, rowHeight);
@@ -328,9 +331,8 @@ public class ScheduleActivity extends AppCompatActivity {
                     textView2.setText(joRTemp.getString("message"));
                     textView2.setGravity(Gravity.CENTER);
                     textView2.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
-                    textView2.setPadding(10,0,0,0);
+                    textView2.setPadding(10, 0, 0, 0);
                     textView2.setTextSize(18);
-
 
                     textView2.setBackgroundResource(R.drawable.schedule_border);
                     tableRow.addView(textView2, ViewGroup.LayoutParams.WRAP_CONTENT, rowHeight);
@@ -350,7 +352,7 @@ public class ScheduleActivity extends AppCompatActivity {
                 Log.d(TAG, jaIng.toString());
                 JSONObject joATemp;
 
-                if(jaIng.length() == 0) {
+                if (jaIng.length() == 0) {
                     sPhone.setText(sUserPhone);
                 }
 
@@ -358,61 +360,110 @@ public class ScheduleActivity extends AppCompatActivity {
                     joATemp = (JSONObject) jaIng.get(i);
                     joSendData = joATemp;
 
+                    // 화면 값
                     message.setText(joATemp.getString("message"));
 
-                    if(!"".equals(joATemp.getString("start_date")) && joATemp.getString("start_date").length() > 10) {
-                        dateStart.setText(joATemp.getString("start_date").substring(0,10).replaceAll("-","/"));
+                    if (!"".equals(joATemp.getString("start_date")) && joATemp.getString("start_date").length() > 10) {
+                        dateStart.setText(joATemp.getString("start_date").substring(0, 10).replaceAll("-", "/"));
                     }
 
-                    if(!"".equals(joATemp.getString("start_date")) && joATemp.getString("start_date").length() > 18) {
-                        Log.d(TAG,"시간====11111===== : " + joATemp.getString("start_date").substring(11,19));
+                    if (!"".equals(joATemp.getString("start_date")) && joATemp.getString("start_date").length() > 18) {
+                        Log.d(TAG, "시간====11111===== : " + joATemp.getString("start_date").substring(11, 19));
                         timeStart.setText(joATemp.getString("start_date").substring(11, joATemp.getString("start_date").length()));
                     }
 
                     sPhone.setText(joATemp.getString("phone_number"));
                     sch_key = joATemp.getString("schedule_key");
 
-                    Log.d(TAG,"전화번호============= : " + sPhone);
+                    Log.d(TAG, "전화번호============= : " + sPhone);
 
                 }
-
-
-
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // 취소버튼
-        cancelBtn = (Button) findViewById(R.id.cancel_btn);
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
+        // 메세지 내용 삭제 버튼
+        deleteMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    if("".equals(sch_key)) {
+                message.setText(null);
+            }
+        });
+
+        // 취소버튼
+        cancelBtn = (Button) findViewById(R.id.cancel_btn);
+        if ("".equals(sch_key)) { // 등록된 스케줄 없는 경우
+            cancelBtn.setVisibility(View.GONE);
+
+        } else { // 있는 경우
+            cancelBtn.setVisibility(View.VISIBLE);
+            cancelBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        JSONObject stopResult = null;
+
                         if (getLocale().equals("ko")) {
-                            msg = "진행중인 스케줄이 없습니다.";
-                            button = "확인";
+                            pMsg = "스케줄을 취소하시겠습니까?";
+                            pButton = "예";
+                            pButton2 = "아니오";
                         } else {
-                            msg = "There is no schedule in progress.";
-                            button = "OK";
+                            pMsg = "Are you sure you want to cancel the schedule?";
+                            pButton = "예";
+                            pButton2 = "아니오";
                         }
-                        popup(pTitle, msg, button);
-                    }
-                    String result = new ScheduleTask().execute("stopUpdate", sch_key).get();
-                    JSONObject stopResult = new JSONObject(result);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ScheduleActivity.this);
+                        builder.setTitle(pTitle);
+                        builder.setMessage(pMsg);
 
-                        if ("SUCCESS".equals(stopResult.getString("RESULT"))) {
-                            if (getLocale().equals("ko")) {
-                                msg = "스케줄을 취소하였습니다.";
-                                button = "확인";
-                            } else {
-                                msg = "The schedule has been canceled.";
-                                button = "OK";
-                            }
-                            popup2(pTitle, msg, button);
+                        //YES
+                        builder.setNegativeButton(pButton,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        try {
+                                            String result = new ScheduleTask().execute("stopUpdate", sch_key).get();
+                                            JSONObject stopResult = new JSONObject(result);
 
-                        } else if ("FAIL".equals(stopResult.getString("RESULT"))) {
+                                            if ("SUCCESS".equals(stopResult.getString("RESULT"))) {
+                                                if (getLocale().equals("ko")) {
+                                                    pTitle = "스케줄";
+                                                    pMsg = "스케줄을 취소하였습니다.";
+                                                    pButton = "확인";
+                                                } else {
+                                                    pTitle = "Schedule";
+                                                    pMsg = "The schedule has been canceled.";
+                                                    pButton = "OK";
+                                                }
+                                                popup(pTitle, pMsg, pButton);
+
+                                            }
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(ScheduleActivity.this);
+                                            builder.setTitle(pTitle);
+                                            builder.setMessage(pMsg);
+                                            builder.setPositiveButton(pButton,
+                                                    new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            Intent intent = getIntent();
+                                                            finish();
+                                                            startActivity(intent);
+                                                        }
+                                                    });
+                                            builder.show();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                        //NO
+                        builder.setPositiveButton(pButton2,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                });
+                        builder.show();
+
+                       /*if ("FAIL".equals(stopResult.getString("RESULT"))) {
                             if (getLocale().equals("ko")) {
                                 msg = "진행중인 스케줄이 없습니다.";
                                 button = "확인";
@@ -421,22 +472,26 @@ public class ScheduleActivity extends AppCompatActivity {
                                 button = "OK";
                             }
                             popup(pTitle, msg, button);
-                        }
+                        }*/
 
 
                     } catch (Exception e) {
-                    e.printStackTrace();
-                    if (getLocale().equals("ko")) {
-                        msg = "스케줄 중지에 문제가 발생했습니다.";
-                        button = "확인";
-                    } else {
-                        msg = "A schedule stop failed.";
-                        button = "OK";
+                        e.printStackTrace();
+                        if (getLocale().equals("ko")) {
+                            pTitle = "스케줄";
+                            msg = "스케줄 중지에 문제가 발생했습니다.";
+                            button = "확인";
+                        } else {
+                            pTitle = "Schedule";
+                            msg = "A schedule stop failed.";
+                            button = "OK";
+                        }
+                        popup2(pTitle, msg, button);
                     }
                 }
-            }
-        });
 
+            });
+        }
 
 
         // 시작날짜
@@ -452,16 +507,27 @@ public class ScheduleActivity extends AppCompatActivity {
         timeStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                long now = System.currentTimeMillis();
+                Date mDate = new Date(now);
+                SimpleDateFormat simpleDate = new SimpleDateFormat("hh");
+                SimpleDateFormat simpleDate2 = new SimpleDateFormat("mm");
+                SimpleDateFormat simpleDate3 = new SimpleDateFormat("ss");
+                String formatHour = simpleDate.format(mDate);
+                String formatMinute = simpleDate2.format(mDate);
+                String formatSecond = simpleDate3.format(mDate);
+               // Log.d("현재시간 : ", getTime);
+
                 view = View.inflate(ScheduleActivity.this, R.layout.time_dialog, null);
                 final NumberPicker numberPickerHour = view.findViewById(R.id.numpicker_hours);
                 numberPickerHour.setMaxValue(23);
-                numberPickerHour.setValue(sharedPreferences.getInt("Hours", 0));
+                    numberPickerHour.setValue(Integer.parseInt(formatHour));
+
                 final NumberPicker numberPickerMinutes = view.findViewById(R.id.numpicker_minutes);
                 numberPickerMinutes.setMaxValue(59);
-                numberPickerMinutes.setValue(sharedPreferences.getInt("Minutes", 0));
+                numberPickerMinutes.setValue(Integer.parseInt(formatMinute));
                 final NumberPicker numberPickerSeconds = view.findViewById(R.id.numpicker_seconds);
                 numberPickerSeconds.setMaxValue(59);
-                numberPickerSeconds.setValue(sharedPreferences.getInt("Seconds", 0));
+                numberPickerSeconds.setValue(Integer.parseInt(formatSecond));
                 Button cancel = view.findViewById(R.id.cancel);
                 Button ok = view.findViewById(R.id.ok);
                 AlertDialog.Builder builder = new AlertDialog.Builder(ScheduleActivity.this);
@@ -476,41 +542,12 @@ public class ScheduleActivity extends AppCompatActivity {
                 ok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.d(TAG,"시간===== : "+ numberPickerHour.getValue());
-                        Log.d(TAG,"분===== : "+ numberPickerMinutes.getValue());
-                        Log.d(TAG,"초===== : "+ numberPickerSeconds.getValue());
+                        Log.d(TAG, "시간===== : " + numberPickerHour.getValue());
+                        Log.d(TAG, "분===== : " + numberPickerMinutes.getValue());
+                        Log.d(TAG, "초===== : " + numberPickerSeconds.getValue());
 
+                        timeStart.setText(leftPad(numberPickerHour.getValue(), 2, "0") + ":" + leftPad(numberPickerMinutes.getValue(), 2, "0") + ":" + leftPad(numberPickerSeconds.getValue(), 2, "0"));
 
-//                        if(numberPickerHour.getValue() < 10) {
-//                            timeStart.setText("0" + numberPickerHour.getValue());
-//                        } else {
-//                            timeStart.setText(numberPickerHour.getValue());
-//                        }
-//
-//                        if(numberPickerHour.getValue() < 10) {
-//
-//                            if (numberPickerMinutes.getValue() < 10) {
-//                                if (numberPickerSeconds.getValue() < 10) {
-//                                    timeStart.setText("0" + numberPickerHour.getValue() + ":" + "0" + numberPickerMinutes.getValue() + ":" + "0" + numberPickerSeconds.getValue());
-//                                } else{
-//                                    timeStart.setText("0" + numberPickerHour.getValue() + ":" + "0" + numberPickerMinutes.getValue() + ":" + numberPickerSeconds.getValue());
-//                                }
-//                            } else{
-//                                timeStart.setText("0" + numberPickerHour.getValue() + ":" + numberPickerMinutes.getValue() + ":" + numberPickerSeconds.getValue());
-//                            }
-//                        } else if(numberPickerHour.getValue() >= 10){
-//                            if(numberPickerMinutes.getValue() < 10) {
-//                                if(numberPickerSeconds.getValue() < 10){
-//                                    timeStart.setText(numberPickerHour.getValue() + ":" + "0" + numberPickerMinutes.getValue() + ":" + "0" + numberPickerSeconds.getValue());
-//                                } else{
-//                                    timeStart.setText(numberPickerHour.getValue() + ":" + numberPickerMinutes.getValue() + ":" + "0" + numberPickerSeconds.getValue());
-//                                }
-//                            }
-//                        }
-
-                        timeStart.setText(leftPad(numberPickerHour.getValue(),2,"0") + ":" + leftPad(numberPickerMinutes.getValue(),2,"0") + ":" + leftPad(numberPickerSeconds.getValue(),2,"0"));
-
-//                        timeTV.setText(String.format("%1$d:%2$02d:%3$02d", numberPickerHour.getValue(), numberPickerMinutes.getValue(), numberPickerSeconds.getValue()));
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putInt("Hours", numberPickerHour.getValue());
                         editor.putInt("Minutes", numberPickerMinutes.getValue());
@@ -524,15 +561,12 @@ public class ScheduleActivity extends AppCompatActivity {
         });
 
 
-
-
-
         // 저장버튼
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-//                Log.d("sbItemList : " , sbItemList);
+                //                Log.d("sbItemList : " , sbItemList);
                 long mNow = System.currentTimeMillis();
                 Date mReDate = new Date(mNow);
                 SimpleDateFormat mFormat1 = new SimpleDateFormat("yyyyMMdd");
@@ -549,67 +583,89 @@ public class ScheduleActivity extends AppCompatActivity {
 
 
                 String TimeStart = timeStart.getText().toString(); // 시작시간
-                /*TimeStart = TimeStart.replace("시 ", "");
-                TimeStart = TimeStart.replace("분", ""); //0416*/
+                    /*TimeStart = TimeStart.replace("시 ", "");
+                    TimeStart = TimeStart.replace("분", ""); //0416*/
                 TimeStart = TimeStart.replace(":", "");
 
 
+                if ("".equals(sch_key)) {
+                    if ("".equals(sReceivePhone)) {
+                        Log.d(TAG, "sbItemList");
+                        if (getLocale().equals("ko")) {
+                            pTitle = "스케줄";
+                            msg = "받는 사람 연락처를 입력해주세요.";
+                            button = "확인";
+                        } else {
+                            pTitle = "Schedule";
+                            msg = "Please enter the recipient's contact information.";
+                            button = "OK";
+                        }
+                        popup(pTitle, msg, button);
+                    } else if ("".equals(Message)) {
+                        if (getLocale().equals("ko")) {
+                            pTitle = "스케줄";
+                            msg = "메세지를 입력하세요.";
+                            button = "확인";
+                        } else {
+                            pTitle = "Schedule";
+                            msg = "Please enter a message.";
+                            button = "OK";
+                        }
+                        popup(pTitle, msg, button);
+                    } else if ("날짜".equals(DateStart) || "date".equals(DateStart)) {
+                        if (getLocale().equals("ko")) {
+                            pTitle = "스케줄";
+                            msg = "예약 날짜를 지정해주세요.";
+                            button = "확인";
+                        } else {
+                            pTitle = "Schedule";
+                            msg = "Please specify a start date.";
+                            button = "OK";
+                        }
+                        popup(pTitle, msg, button);
+                    } else if ("시간".equals(TimeStart) || "time".equals(TimeStart)) {
+                        if (getLocale().equals("ko")) {
+                            pTitle = "스케줄";
+                            msg = "예약 시간을 지정해주세요.";
+                            button = "확인";
+                        } else {
+                            pTitle = "Schedule";
+                            msg = "Please specify a start time.";
+                            button = "OK";
+                        }
+                        popup(pTitle, msg, button);
+                    } else {
+                        try {
+                            String result = new ScheduleTask().execute("saveSchedule", Message, DateStart, TimeStart, sUserId, sUserPhone, sReceivePhone).get();
 
-                if ("".equals(sReceivePhone)) {
-                    Log.d(TAG, "sbItemList");
+                            if (getLocale().equals("ko")) {
+                                pTitle = "스케줄";
+                                msg = "스케줄 등록 되었습니다.";
+                                button = "확인";
+                            } else {
+                                pTitle = "Schedule";
+                                msg = "The schedule has been registered.";
+                                button = "OK";
+                            }
+                            popup2(pTitle, msg, button);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else{
                     if (getLocale().equals("ko")) {
                         pTitle = "스케줄";
-                        msg = "받는 사람 연락처를 입력해주세요.";
+                        msg = "이미 등록된 스케줄이 있습니다.";
                         button = "확인";
                     } else {
                         pTitle = "Schedule";
-                        msg = "Please enter the recipient's contact information.";
+                        msg = "There is already a registered schedule.";
                         button = "OK";
                     }
                     popup(pTitle, msg, button);
-                } else if ("날짜".equals(DateStart) || "date".equals(DateStart)) {
-                    if (getLocale().equals("ko")) {
-                        pTitle = "스케줄";
-                        msg = "예약 날짜를 지정해주세요.";
-                        button = "확인";
-                    } else {
-                        pTitle = "Schedule";
-                        msg = "Please specify a start date.";
-                        button = "OK";
-                    }
-                    popup(pTitle, msg, button);
-                } else if ("시간".equals(TimeStart) || "time".equals(TimeStart)) {
-                    if (getLocale().equals("ko")) {
-                        pTitle = "스케줄";
-                        msg = "예약 시간을 지정해주세요.";
-                        button = "확인";
-                    } else {
-                        pTitle = "Schedule";
-                        msg = "Please specify a start time.";
-                        button = "OK";
-                    }
-                    popup(pTitle, msg, button);
-                }
-
-                try {
-                    String result = new ScheduleTask().execute("saveSchedule", Message, DateStart, TimeStart, sUserId, sUserPhone, sReceivePhone).get();
-
-                    if (getLocale().equals("ko")) {
-                        pTitle = "스케줄";
-                        msg = "스케줄 등록 되었습니다.";
-                        button = "확인";
-                    } else {
-                        pTitle = "Schedule";
-                        msg = "The schedule has been registered.";
-                        button = "OK";
-                    }
-                    popup2(pTitle, msg, button);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
-
         });
     }
 
@@ -703,9 +759,9 @@ public class ScheduleActivity extends AppCompatActivity {
                                         builder.setPositiveButton(pButton,
                                                 new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int which) {
-                                                                moveTaskToBack(true); // 태스크를 백그라운드로 이동
-                                                                finishAndRemoveTask(); // 액티비티 종료 + 태스크 리스트에서 지우기
-                                                                android.os.Process.killProcess(android.os.Process.myPid()); // 앱 프로세스 종료
+                                                        moveTaskToBack(true); // 태스크를 백그라운드로 이동
+                                                        finishAndRemoveTask(); // 액티비티 종료 + 태스크 리스트에서 지우기
+                                                        android.os.Process.killProcess(android.os.Process.myPid()); // 앱 프로세스 종료
                                                     }
                                                 });
                                         builder.show();
@@ -777,6 +833,7 @@ public class ScheduleActivity extends AppCompatActivity {
             toast.show();
             return;
         }
+
         // 마지막으로 뒤로 가기 버튼을 눌렀던 시간에 2.5초를 더해 현재 시간과 비교 후
         // 마지막으로 뒤로 가기 버튼을 눌렀던 시간이 2.5초가 지나지 않았으면 종료
         if (System.currentTimeMillis() <= backKeyPressedTime + 2500) {
@@ -788,4 +845,9 @@ public class ScheduleActivity extends AppCompatActivity {
             toast.show();
         }
     }
+
+
+
+
+
 }
