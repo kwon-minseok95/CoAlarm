@@ -520,8 +520,7 @@ public class ScheduleActivity extends AppCompatActivity {
                 view = View.inflate(ScheduleActivity.this, R.layout.time_dialog, null);
                 final NumberPicker numberPickerHour = view.findViewById(R.id.numpicker_hours);
                 numberPickerHour.setMaxValue(23);
-                    numberPickerHour.setValue(Integer.parseInt(formatHour));
-
+                numberPickerHour.setValue(Integer.parseInt(formatHour));
                 final NumberPicker numberPickerMinutes = view.findViewById(R.id.numpicker_minutes);
                 numberPickerMinutes.setMaxValue(59);
                 numberPickerMinutes.setValue(Integer.parseInt(formatMinute));
